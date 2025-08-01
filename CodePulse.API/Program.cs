@@ -26,6 +26,11 @@ builder.Services.AddDbContext<AuthDbContext>(options =>
 
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IBlogPostRepository, BlogPostRepository>();
+builder.Services.AddScoped<ITokenRepository, TokenRepository>();
+
+builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+    .AddEntityFrameworkStores<AuthDbContext>()
+    .AddDefaultTokenProviders();
 
 builder.Services.Configure<IdentityOptions>(options =>
 {
@@ -44,16 +49,21 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     {
         options.TokenValidationParameters = new TokenValidationParameters
         {
-            AuthenticationType = "Jwt",
+            //AuthenticationType = "Jwt",
             ValidateIssuer = true,
             ValidateAudience = true,
+            ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
             ValidIssuer = builder.Configuration["Jwt:Issuer"],
-            ValidAudience = builder.Configuration["Jwt:Audiene"],
+            ValidAudience = builder.Configuration["Jwt:Audience"],
             IssuerSigningKey =
             new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
         };
     });
+
+builder.Services.AddAuthorization(); // important
+
+
 
 
 var myAngularApp = "_myAngularApp";
@@ -82,7 +92,7 @@ app.UseHttpsRedirection();
 
 app.UseCors(myAngularApp);
 
-app.UseAuthorization();
+app.UseAuthentication();
 
 app.UseAuthorization();
 

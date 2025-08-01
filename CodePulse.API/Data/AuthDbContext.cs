@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace CodePulse.API.Data
 {
@@ -9,6 +10,14 @@ namespace CodePulse.API.Data
     {
         public AuthDbContext(DbContextOptions<AuthDbContext> options) : base(options)
         {
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            base.OnConfiguring(optionsBuilder);
+
+            optionsBuilder.ConfigureWarnings(warnings =>
+                warnings.Ignore(RelationalEventId.PendingModelChangesWarning));
         }
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -26,10 +35,10 @@ namespace CodePulse.API.Data
                     Id = readerRoleId,
                     Name = "Reader",
                     NormalizedName= "Reader".ToUpper(),
-                    ConcurrencyStamp = readerRoleId 
+                    ConcurrencyStamp = readerRoleId
                 },
                 new IdentityRole()
-                { 
+                {
                     Id = writerRoleId,
                     Name = "Writer",
                     NormalizedName= "Writer".ToUpper(),
@@ -37,6 +46,7 @@ namespace CodePulse.API.Data
                 }
 
             };
+
             // seed the roles   
             builder.Entity<IdentityRole>().HasData(roles);
 
@@ -58,11 +68,11 @@ namespace CodePulse.API.Data
             // Give roles to Admin user
             var adminRoles = new List<IdentityUserRole<string>>()
             {
-                new()
-                {
-                    UserId = adminUserId,
-                    RoleId = readerRoleId
-                },
+                //new()
+                //{
+                //    UserId = adminUserId,
+                //    RoleId = readerRoleId
+                //},
                 new()
                 {
 
@@ -73,7 +83,7 @@ namespace CodePulse.API.Data
 
             builder.Entity<IdentityUserRole<string>>().HasData(adminRoles);
 
-        } 
+        }
 
     }
 }

@@ -17,12 +17,12 @@ namespace CodePulse.API.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.5")
+                .HasAnnotation("ProductVersion", "9.0.6")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("CodePulse.API.Models.BlogPost", b =>
+            modelBuilder.Entity("CodePulse.API.Models.Domain.BlogPost", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -63,7 +63,7 @@ namespace CodePulse.API.Migrations
                     b.ToTable("BlogPosts");
                 });
 
-            modelBuilder.Entity("CodePulse.API.Models.Category", b =>
+            modelBuilder.Entity("CodePulse.API.Models.Domain.Category", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
